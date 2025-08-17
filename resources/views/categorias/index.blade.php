@@ -22,7 +22,14 @@
                 <tr>
                     <td>{{ $dato->nombre }}</td>
                     <td>{{ $dato->descripcion }}</td>
-                    <td>Editar - Eliminar</td>
+                    <td>
+                        <a href="{{ route('categorias.edit', $dato->id) }}" class="btn btn-info">Editar</a>
+                        <form action="{{ route('categorias.destroy', $dato->id) }}" method='POST'>
+                            @csrf
+                            @method("DELETE")
+                            <button class="btn btn-danger" onclick="return confirm('¿Quiere eliminar el registro?')">Eliminar</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach()
         </tbody>

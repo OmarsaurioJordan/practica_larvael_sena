@@ -20,6 +20,8 @@ ahí revisamos que la ruta `'/'` raíz apunte al `index`
 
 - https://jqueryvalidation.org/ en Download buscamos `SourceCode.zip`, lo descomprimimos y dentro en `dist` está `jquery.validate.min.js` lo copiamos en `nombreProyecto/public/js` y luego copiamos `messages_es.min` en `nombreProyecto/public/js/localization`
 
+- Nota: el archivo server.php a veces es borrado por los antivirus.
+
 ## Crear nuevo CRUD
 
 ### Migración
@@ -83,6 +85,27 @@ public function store(Request $request) {
         return redirect('categorias')->with('type', 'success')->with('message', 'Categoría creada exitosamente');
     }
 }
+public function edit(string $id) {
+    $datos = Categoria::find($id);
+    return view('categorias.edit', compact('datos'));
+}
+public function update(Request $request, Categoria $categoria) {
+    $validator = Validator::make($request->all(), [
+        'nombre' => 'required|max:50',
+        'descripcion' => 'required|max:200'
+    ]);
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput();
+    }
+    else {
+        $categoria->update($request->all());
+        return redirect('categorias')->with('type', 'warning')->with('message', 'Categoría actualizada exitosamente');
+    }
+}
+public function destroy(string $id) {
+    Categoria::destroy($id);
+    return redirect('categorias')->with('type', 'danger')->with('message', 'El registro se eliminó');
+}
 ```
 
 ### Vistas
@@ -101,6 +124,12 @@ en `nombreProyecto/resources/views/categorias` notar que hay una carpeta llamada
 @endif
 @foreach($datos as $dato)
     <p>{{ $dato->nombre }}</p>
+    <a href="{{ route('categorias.edit', $dato->id) }}">Editar</a>
+    <form action="{{ route('categorias.destroy', $dato->id) }}" method='POST'>
+        @csrf
+        @method("DELETE")
+        <button onclick="return confirm('¿Eliminar?')">Eliminar</button>
+    </form>
 @endforeach()
 ```
 
@@ -136,6 +165,33 @@ en `nombreProyecto/resources/views/categorias` notar que hay una carpeta llamada
 
 - `edit.blade.php` para editar un registro:
 ```
+<form id='form' action="{{ route('categorias.update', $datos->id) }}" method='POST'>
+    @csrf
+    @method('PUT')
+    <div>
+        <input type='text' name='nombre' placeholder='...' value="{{ old('nombre', $datos->nombre) }}">
+        @error('nombre')
+            <div>{{ $message }}</div>
+        @enderror
+    </div>
+    ... lo mismo para descripcion
+    <button>Actualizar</button>
+    <a href="{{ url('categorias') }}">Cancelar</a>
+</form>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="{{ url('js/jquery.validate.min.js') }}"></script>
+<script src="{{ url('js/localization/messages_es.min.js') }}"></script>
+<script>
+    $("#form").validate({
+        rules: {
+            nombre: {
+                required: true,
+                maxlength: 50
+            },
+            ... lo mismo para descripcion
+        }
+    });
+</script>
 ```
 
 ### Direcciónes
@@ -145,14 +201,3 @@ en `nombreProyecto/resources/views/categorias` notar que hay una carpeta llamada
 - agregamos: `use App\Http\Controllers\CategoriaController` para poder acceder al controlador de Categoria
 
 - agregar `Route::resource('categorias', CategoriaController::class);` para poder acceder al controlador de Categoria y redirigir las vistas
-
-
-
-
-
-
-
-
-
-
-quedé en EDIT|categorías pag 15

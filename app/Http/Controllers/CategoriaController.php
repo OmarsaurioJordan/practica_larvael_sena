@@ -33,4 +33,31 @@ class CategoriaController extends Controller
             return redirect('categorias')->with('type', 'success')->with('message', 'Categoría creada exitosamente');
         }
     }
+
+    public function edit(string $id)
+    {
+        $datos = Categoria::find($id);
+        return view('categorias.edit', compact('datos'));
+    }
+
+    public function update(Request $request, Categoria $categoria)
+    {
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|max:50',
+            'descripcion' => 'required|max:200'
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+        else {
+            $categoria->update($request->all());
+            return redirect('categorias')->with('type', 'warning')->with('message', 'Categoría actualizada exitosamente');
+        }
+    }
+
+    public function destroy(string $id)
+    {
+        Categoria::destroy($id);
+        return redirect('categorias')->with('type', 'danger')->with('message', 'El registro se eliminó');
+    }
 }
