@@ -11,10 +11,12 @@
         <div class="container">
             <a href="{{ url('/') }}">Inicio</a>
             @if (Auth::user())
-                 | <a href="{{ url('categorias') }}">Categorías</a> | 
-                <a href="{{ url('usuarios') }}">Usuarios</a> | 
-                <a href="{{ url('rols') }}">Roles</a> | 
-                <a href="{{ url('logout') }}">Salir</a>
+                 | <a href="{{ url('usuarios') }}">Usuarios</a>
+                @if (Auth::user()->rol->nombre == "Administrador")
+                     | <a href="{{ url('categorias') }}">Categorías</a>
+                     | <a href="{{ url('rols') }}">Roles</a>
+                @endif
+                 | <a href="{{ url('logout') }}">Salir</a>
             @endif
             @yield('content')
         </div>

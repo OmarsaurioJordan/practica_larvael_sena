@@ -25,12 +25,15 @@ Route::get('logout', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-
+    // solo si esta logeado
     Route::get('home', function () {
         return view('index');
     });
-
-    Route::resource('categorias', CategoriaController::class);
     Route::resource('usuarios', UsuarioController::class);
-    Route::resource('rols', RolController::class);
+
+    Route::middleware(['admin'])->group(function () {
+        // solo rol administrador
+        Route::resource('categorias', CategoriaController::class);    
+        Route::resource('rols', RolController::class);
+    });
 });

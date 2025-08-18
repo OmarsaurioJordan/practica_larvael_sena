@@ -1,4 +1,4 @@
-# Tutorial Larabel
+# Tutorial Larabel v12
 
 ## Crear un proyecto
 
@@ -17,6 +17,9 @@ ubicar la línea de comandos en la carpeta donde se creará el proyecto y ejecut
 @if (Auth::user())
     // dentro del if lo que solo se ve si se hizo login
     <a href="{{ url('categorias') }}">Categorías</a>
+    @if (Auth::user()->rol->nombre == "Administrador")
+        // aca solo lo que puede ver el administrador
+    @endif
 @endif
 ```
 
@@ -304,8 +307,11 @@ Route::get('logout', function () {
 Route::middleware(['auth'])->group(function () {
     // rutas protegidas por login
     Route::get('home', function () { return view('index'); });
-    Route::resource('categorias', CategoriaController::class);
     Route::resource('usuarios', UsuarioController::class);
+    Route::middleware(['admin'])->group(function () {
+        // rutas exclusivas para administrador
+        Route::resource('categorias', CategoriaController::class);
+    });
 });
 ```
 
@@ -347,4 +353,20 @@ public function rol() {
 }
 ```
 
-9:00 middlewares autenticacion roles
+- se crean los middlewares así `php artisan make:middleware RolAdmin` queda en la ruta `nombreProyecto/app/Http/Middleware/RolAdmin.php`
+
+- se colocará en ese middleware (podría ser también con rol->id), no olvidar la importación `use Auth;`:
+```
+if (Auth::user()->rol->nombre == "Administrador") {
+    return $next($request); }
+return redirect()->back();
+```
+
+- recordar el `Route::middleware(['admin'])->group(function () {});` en direcciónes web, bueno, toca registrar ese `admin`
+
+- en `nombreProyecto/bootstrap/app.php`
+```
+->withMiddleware(function (Middleware $middleware): void {
+    $middleware->alias(['admin' => \App\Http\Middleware\RolAdmin::class]);
+})
+```

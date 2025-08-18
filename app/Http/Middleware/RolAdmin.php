@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Auth;
 
 class RolAdmin
 {
@@ -15,6 +16,9 @@ class RolAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        if (Auth::user()->rol->nombre == "Administrador") {
+            return $next($request);
+        }
+        return redirect()->back();
     }
 }
