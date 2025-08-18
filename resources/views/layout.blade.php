@@ -9,9 +9,12 @@
     </head>
     <body>
         <div class="container">
-            <a href="{{ url('/') }}">Inicio</a> | 
-            <a href="{{ url('categorias') }}">Categorías</a> | 
-            <a href="{{ url('usuarios') }}">Usuarios</a>
+            <a href="{{ url('/') }}">Inicio</a>
+            @if (Auth::user())
+                 | <a href="{{ url('categorias') }}">Categorías</a> | 
+                <a href="{{ url('usuarios') }}">Usuarios</a> | 
+                <a href="{{ url('logout') }}">Salir</a>
+            @endif
             @yield('content')
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>

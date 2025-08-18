@@ -11,7 +11,14 @@ ubicar la línea de comandos en la carpeta donde se creará el proyecto y ejecut
 
 - en `nombreProyecto/resources/views` crear `index.blade.php` tendrá la página principal una vez el usuario esté logeado
 
-- crear `layout.blade.php` que es el blade que hace de esquema básico para ser heredado por otras views
+- crear `layout.blade.php` que es el blade que hace de esquema básico para ser heredado por otras views, ahí dentro se suelen poner links de navegación del sitio así:
+```
+<a href="{{ url('/') }}">Inicio</a>
+@if (Auth::user())
+    // dentro del if lo que solo se ve si se hizo login
+    <a href="{{ url('categorias') }}">Categorías</a>
+@endif
+```
 
 - `welcome.blade.php` es la página de inicio por defecto de larabel
 
@@ -216,7 +223,7 @@ en `nombreProyecto/resources/views/categorias` notar que hay una carpeta llamada
 
 - agregar `Route::resource('categorias', CategoriaController::class);` para poder acceder al controlador de Categoria y redirigir las vistas
 
-### Caso para CRUD de Usuarios
+### Caso para CRUD de Usuarios y Login
 
 - el modelo debe tener unas cosas extra:
 ```
@@ -232,7 +239,16 @@ class Usuario extends Authenticatable {
 }
 ```
 
-- la migración debe contener: `$table->string('email', length:100)->unique();` y `$table->rememberToken();` la segunda es obligatoria, va de penúltima antes de `timestamps`
+- la migración debe contener: `$table->string('email', length:100)->unique();` y `$table->rememberToken();` va de penúltima antes de `timestamps` tener en cuenta que se requiere `email` y `password` para hacer login en Laravel, así en inglés
+
+- en el controlador hay que usar las importaciónes:
+```
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Usuario;
+use Auth;
+use Hash;
+```
 
 - en el controlador pondremos password con hash, esto en la función store y update:
 ```
@@ -240,3 +256,55 @@ $datos = $request->all();
 $datos['password'] = hash::make($datos['password']);
 Usuario::create($datos);
 ```
+
+- agregamos `<a href="{{ url('logout') }}">Salir</a>` a la vista `layout.blade.php` para poder salir de la sesión
+
+- en la carpeta `views` crear el `login.blade.index` con su formulario que pide email y password, no utiliza la herencia de `layout` enviará su contenido así: `<form action="Check" method="POST">`
+
+- en direcciónes `web.php` creamos una ruta `Route::post('Check', [UsiarioController::class, 'check']);` es de tipo post, se alcanza mediante la string `Check` y dispara la función `check` del controlador `UsuarioController`
+
+- en el controlador debemos poner:
+```
+public function check(Request $request) {
+    if (Auth::attempt($request->only('email', 'password'))) {
+        return redirect()->intended('home');
+    }
+    return redirect('login')->with('type', 'danger')->with('message', 'Usuario o contraseña incorrectos');
+}
+```
+
+- en direcciónes web debemos poner la nueva ruta llamada `home`:
+```
+Route::get('home', function () {
+    return view('index');
+});
+```
+
+- para redireccionar rutas cuando hay o no login (prohibir rutas) se usan los Middleware, que están en `nombreProyecto/bootstrap\app.php` se pueden crear nuevos pero Laravel trae unos por defecto
+
+- vamos a las direcciónes web, debe quedar algo así:
+```
+// rutas no protegidas por login
+Route::get('/', function () {
+    if (Auth::check()) {
+        return view('index');
+    }
+    else {
+        return view('login');
+    }
+});
+Route::get('login', function () { return view('login'); })->name('login');
+Route::post('Check', [UsuarioController::class, 'check']);
+Route::get('logout', function () {
+    Auth::logout();
+    return redirect('login');
+});
+Route::middleware(['auth'])->group(function () {
+    // rutas protegidas por login
+    Route::get('home', function () { return view('index'); });
+    Route::resource('categorias', CategoriaController::class);
+    Route::resource('usuarios', UsuarioController::class);
+});
+```
+
+- debemos indicarle en `nombreProyecto/config/auth.php` que el modelo usado para autenticación es `Usuario` y no `User` (por defecto), buscar `AUTH_MODEL`

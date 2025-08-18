@@ -5,9 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Usuario;
+use Auth;
+use Hash;
 
 class UsuarioController extends Controller
 {
+    public function check(Request $request)
+    {
+        if (Auth::attempt($request->only('email', 'password'))) {
+            return redirect()->intended('home');
+        }
+        return redirect('login')->with('type', 'danger')->with('message', 'Usuario o contraseña incorrectos');
+    }
+
     public function index()
     {
         $datos = Usuario::all();
