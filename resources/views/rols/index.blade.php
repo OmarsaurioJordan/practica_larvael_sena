@@ -1,9 +1,9 @@
 @extends('layout')
-@section('title', 'Usuarios')
+@section('title', 'Roles')
 @section('content')
-    <h3 class="mt-4">Listado de Usuarios</h3>
+    <h3 class="mt-4">Listado de Roles</h3>
     <div class="text-end">
-        <a href="{{ url('usuarios/create') }}" class="btn btn-primary">Nuevo</a>
+        <a href="{{ url('rols/create') }}" class="btn btn-primary">Nuevo</a>
     </div>
     @if(session('type'))
         <div class="alert alert-{{session('type')}} alert-dismissible fade show" role="alert">
@@ -14,21 +14,15 @@
     <table class="table">
         <thead>
             <th>Nombre</th>
-            <th>Teléfono</th>
-            <th>Rol</th>
-            <th>Correo</th>
             <th>Acciones</th>
         </thead>
         <tbody>
             @foreach($datos as $dato)
                 <tr>
                     <td>{{ $dato->nombre }}</td>
-                    <td>{{ $dato->telefono }}</td>
-                    <td>{{ $dato->rol->nombre }}</td>
-                    <td>{{ $dato->email }}</td>
                     <td>
-                        <a href="{{ route('usuarios.edit', $dato->id) }}" class="btn btn-info">Editar</a>
-                        <form action="{{ route('usuarios.destroy', $dato->id) }}" method='POST'>
+                        <a href="{{ route('rols.edit', $dato->id) }}" class="btn btn-info">Editar</a>
+                        <form action="{{ route('rols.destroy', $dato->id) }}" method='POST'>
                             @csrf
                             @method("DELETE")
                             <button class="btn btn-danger" onclick="return confirm('¿Quiere eliminar el registro?')">Eliminar</button>

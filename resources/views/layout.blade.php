@@ -13,6 +13,7 @@
             @if (Auth::user())
                  | <a href="{{ url('categorias') }}">Categorías</a> | 
                 <a href="{{ url('usuarios') }}">Usuarios</a> | 
+                <a href="{{ url('rols') }}">Roles</a> | 
                 <a href="{{ url('logout') }}">Salir</a>
             @endif
             @yield('content')

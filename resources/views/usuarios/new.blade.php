@@ -25,11 +25,11 @@
 		<div class='row'>
 			<div class='col-md-4'>
 				<label><strong>Rol:</strong></label><br>
-				<input type='radio' id='Admin' name='rol' value='1'>
+				<input type='radio' id='Admin' name='rol_id' value='1'>
 				<label for='Admin'>Admin</label><br>
-				<input type='radio' id='Vende' name='rol' value='2'>
+				<input type='radio' id='Vende' name='rol_id' value='2'>
 				<label for='Vende'>Vende</label><br>
-				<input type='radio' id='Compra' name='rol' value='3'>
+				<input type='radio' id='Compra' name='rol_id' value='3'>
 				<label for='Compra'>Compra</label>
 				@error('email')
 					<div class='error compacto col-lg-5'>{{ $message }}</div>
@@ -74,7 +74,7 @@
                     required: true,
                     maxlength: 50
                 },
-				rol: {
+				rol_id: {
 					required: true
 				},
 				email: {

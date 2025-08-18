@@ -56,7 +56,7 @@ en `nombreProyecto/database/migrations` está `fecha_create_categorias_table.php
 
 - ahí, en `Schema::create` entre `id()` y `timestamps()` poner atributos, ej: `$table->string('nombre', length:50);`
 
-- migrar:
+- migrar (recordar que las tablas se crean en órden, puede haber fallos si llave foránea no tiene a dónde apuntar):
 `php artisan migrate`
 
 ### Modelo
@@ -103,7 +103,7 @@ public function store(Request $request) {
     }
     else {
         Categoria::create($request->all());
-        return redirect('categorias')->with('type', 'success')->with('message', 'Categoría creada exitosamente');
+        return redirect('categorias')->with('type', 'success')->with('message', 'Registro creado exitosamente');
     }
 }
 public function edit(string $id) {
@@ -120,7 +120,7 @@ public function update(Request $request, Categoria $categoria) {
     }
     else {
         $categoria->update($request->all());
-        return redirect('categorias')->with('type', 'warning')->with('message', 'Categoría actualizada exitosamente');
+        return redirect('categorias')->with('type', 'warning')->with('message', 'Registro actualizado exitosamente');
     }
 }
 public function destroy(string $id) {
@@ -241,6 +241,8 @@ class Usuario extends Authenticatable {
 
 - la migración debe contener: `$table->string('email', length:100)->unique();` y `$table->rememberToken();` va de penúltima antes de `timestamps` tener en cuenta que se requiere `email` y `password` para hacer login en Laravel, así en inglés
 
+- también debe tener `$table->foreignId('rol_id')->constrained('rols');` pues será una llave foránea a Rol
+
 - en el controlador hay que usar las importaciónes:
 ```
 use Illuminate\Http\Request;
@@ -308,3 +310,41 @@ Route::middleware(['auth'])->group(function () {
 ```
 
 - debemos indicarle en `nombreProyecto/config/auth.php` que el modelo usado para autenticación es `Usuario` y no `User` (por defecto), buscar `AUTH_MODEL`
+
+- en el index de usuarios, si se ha utilizado una llave foránea, por ejemplo `rol_id`, se puede acceder a su contenido así `{{ $dato->rol->nombre }}` para que no aparezca todo el array, notar que `$dato->rol_id` devuelve el número y `$dato->rol` automáticamente todo el array del registro Rol
+
+### CRUD para manejo de Roles y Permisos
+
+- crear el CRUD para Rol (rol - rols, si va a poner roles hay un paso extra) solo requiere atributo `nombre`
+
+- crear el CRUD para Permiso, pero no necesita las vistas, poner en la migración:
+```
+$table->foreignId('rol_id')->constrained('rols');
+$table->foreignId('accion_id')->constrained('accions');
+```
+
+- crear el CRUD para Accion, pero no necesita las vistas, poner en la migración:
+```
+$table->string('nombre', length:50);
+$table->string('url', length:255);
+$table->string('modulo', length:255);
+```
+
+- el modelo `Rol.php` tiene además lo sigueinte para decir que 1 rol tiene M usuarios, 1 rol tiene M permisos (hacer lo mismo para acciones respecto a permisos):
+```
+public function usuarios() {
+    return $this->hasMany('App\Models\Usuario');
+}
+public function permisos() {
+    return $this->hasMany('App\Models\Permiso');
+}
+```
+
+- el modelo `Usuario.php` tiene entonces lo siguiente para decir que 1 usuario tiene 1 rol (hacer lo mismo para permisos respecto a roles y acciones):
+```
+public function rol() {
+    return $this->belongsTo('App\Models\Rol');
+}
+```
+
+9:00 middlewares autenticacion roles

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre', length:50);
             $table->string('telefono', length:50);
-            $table->tinyInteger('rol');
+            $table->foreignId('rol_id')->constrained('rols');
             $table->string('email', length:100)->unique();
             $table->string('password', length:200);
             $table->rememberToken();

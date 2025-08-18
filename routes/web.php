@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\RolController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -31,4 +32,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('categorias', CategoriaController::class);
     Route::resource('usuarios', UsuarioController::class);
+    Route::resource('rols', RolController::class);
 });

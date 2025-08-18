@@ -34,7 +34,7 @@ class UsuarioController extends Controller
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|max:50',
             'telefono' => 'required|max:50',
-            'rol' => 'required',
+            'rol_id' => 'required',
             'email' => 'required|max:100',
             'password' => 'required|max:200',
         ]);
@@ -60,7 +60,7 @@ class UsuarioController extends Controller
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|max:50',
             'telefono' => 'required|max:50',
-            'rol' => 'required',
+            'rol_id' => 'required',
             'email' => 'required|max:100',
             'password' => 'required|max:200',
         ]);

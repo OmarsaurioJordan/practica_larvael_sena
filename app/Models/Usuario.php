@@ -16,8 +16,12 @@ class Usuario extends Authenticatable
     public $fillable = [
         'nombre',
         'telefono',
-        'rol',
+        'rol_id',
         'email',
         'password'
     ];
+
+    public function rol() {
+        return $this->belongsTo('App\Models\Rol');
+    }
 }
