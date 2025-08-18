@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Permiso extends Model
 {
+    public $fillable = [
+        'rol_id',
+        'accion_id'
+    ];
+
     public function accion() {
         return $this->belongsTo('App\Models\Accion');
     }

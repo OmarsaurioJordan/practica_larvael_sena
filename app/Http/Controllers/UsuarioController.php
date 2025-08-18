@@ -10,6 +10,15 @@ use Hash;
 
 class UsuarioController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('verificar:ver_usuarios')->only('index');
+        $this->middleware('verificar:crear_usuarios')->only('create', 'store');
+        $this->middleware('verificar:editar_usuarios')->only('edit', 'update');
+        $this->middleware('verificar:eliminar_usuarios')->only('destroy');
+        $this->middleware('verificar:ver_detalle_usuarios')->only('show');
+    }
+
     public function check(Request $request)
     {
         if (Auth::attempt($request->only('email', 'password'))) {

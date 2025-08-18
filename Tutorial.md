@@ -353,7 +353,7 @@ public function rol() {
 }
 ```
 
-### Middlewares para Roles
+### Middlewares para Roles independientes
 
 - se crean los middlewares así `php artisan make:middleware RolAdmin` queda en la ruta `nombreProyecto/app/Http/Middleware/RolAdmin.php`
 
@@ -372,3 +372,60 @@ return redirect()->back();
     $middleware->alias(['admin' => \App\Http\Middleware\RolAdmin::class]);
 })
 ```
+
+### Middleware general para todos los Roles
+
+- se creará un middleware llamado `VerificarPermiso`
+```
+public function handle(Request $request, Closure $next, $accionNombre): Response {
+    $usuario = auth::user();
+    if (!$usuario || !$usurio->tienePermiso($accionNombre)) {
+        abort(403, 'No tienes permiso para esta acción'); }
+    return $next($request);
+}
+```
+
+- en `app.php` debemos poner `'verificar' => \App\Http\Middleware\VerificarPermiso::class`
+
+- los helpers son como funciones globales que usamos muy a menudo por ejemplo `route()` vamos a crear `tienePermiso()` como está relacionado con el modelo Usuario, pondremos la función ahí:
+```
+public function tienePermiso($nombreAccion) {
+    return $this->rol && $this->rol->permisos->contains(function($permiso) use($nombreAccion) {
+        return $permiso->accion->nombre === $nombreAccion;
+    });
+}
+```
+
+- luego en el `UsuarioController` (los nombres deben coincidir con lo almacenado en la DB en acciones):
+```
+public function __construct() {
+    $this->middleware('verificar:ver_usuarios')->only('index');
+    $this->middleware('verificar:crear_usuarios')->only('create', 'store');
+    $this->middleware('verificar:editar_usuarios')->only('edit', 'update');
+    $this->middleware('verificar:eliminar_usuarios')->only('destroy');
+    $this->middleware('verificar:ver_detalle_usuarios')->only('show');
+}
+```
+
+- en `Controller.php` hay que decir que los controladores heredan del Middleware
+```
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+abstract class Controller {
+    use AuthorizesRequests, ValidatesRequests; }
+```
+
+- ya en `web.php` los otros middlewares no son necesarios
+
+### Seeders para precargar la DB
+
+- usaremos Seeders para precargar datos en la DB al hacer la migración
+
+- se crean así `php artisan make:seeder AccionSeeder` y queda en `nombreProyecto/database/seeders/AccionSeeder.php`
+
+- dentro de `run()` vamos a poner líneas del tipo `Accion::create(['nombre' => 'crear_usuarios', 'url' => 'usuarios/create', 'modulo' => 'Usuarios']);` no olvidar incluir el modelo `use App\Models\Accion;`
+
+- buscar `DatabaseSeeder.php` y en su `run()` registramos `$this->call(AccionSeeder::class);`
+
+- al final se ejecutan con `php artisan db:seed`

@@ -13,8 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'administrador' => \App\Http\Middleware\RolAdmin::class,
-            'comprador' => \App\Http\Middleware\RolAdmin::class,
-            'vendedor' => \App\Http\Middleware\RolAdmin::class
+            'comprador' => \App\Http\Middleware\RolComprador::class,
+            'vendedor' => \App\Http\Middleware\RolVendedor::class,
+            'verificar' => \App\Http\Middleware\VerificarPermiso::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

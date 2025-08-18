@@ -24,4 +24,10 @@ class Usuario extends Authenticatable
     public function rol() {
         return $this->belongsTo('App\Models\Rol');
     }
+
+    public function tienePermiso($nombreAccion) {
+        return $this->rol && $this->rol->permisos->contains(function($permiso) use($nombreAccion) {
+            return $permiso->accion->nombre === $nombreAccion;
+        });
+    }
 }

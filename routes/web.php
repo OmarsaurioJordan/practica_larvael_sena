@@ -31,6 +31,8 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::resource('usuarios', UsuarioController::class);
 
+    // estos son los middleware de uso individual, se usa el colectivo conectado a la DB mediante acciones y permisos
+
     Route::middleware(['administrador'])->group(function () {
         // solo rol administrador
         Route::resource('categorias', CategoriaController::class);    
