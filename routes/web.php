@@ -31,9 +31,17 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::resource('usuarios', UsuarioController::class);
 
-    Route::middleware(['admin'])->group(function () {
+    Route::middleware(['administrador'])->group(function () {
         // solo rol administrador
         Route::resource('categorias', CategoriaController::class);    
         Route::resource('rols', RolController::class);
+    });
+
+    Route::middleware(['comprador'])->group(function () {
+        // solo rol comprador
+    });
+
+    Route::middleware(['vendedor'])->group(function () {
+        // solo rol vendedor
     });
 });

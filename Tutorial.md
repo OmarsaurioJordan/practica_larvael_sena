@@ -353,6 +353,8 @@ public function rol() {
 }
 ```
 
+### Middlewares para Roles
+
 - se crean los middlewares así `php artisan make:middleware RolAdmin` queda en la ruta `nombreProyecto/app/Http/Middleware/RolAdmin.php`
 
 - se colocará en ese middleware (podría ser también con rol->id), no olvidar la importación `use Auth;`:
