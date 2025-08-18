@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\UsuarioController;
 
 Route::get('/', function () {
     //return view('welcome');
@@ -10,3 +11,4 @@ Route::get('/', function () {
 });
 
 Route::resource('categorias', CategoriaController::class);
+Route::resource('usuarios', UsuarioController::class);

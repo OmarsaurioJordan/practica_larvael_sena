@@ -30,7 +30,7 @@ class CategoriaController extends Controller
         }
         else {
             Categoria::create($request->all());
-            return redirect('categorias')->with('type', 'success')->with('message', 'Categoría creada exitosamente');
+            return redirect('categorias')->with('type', 'success')->with('message', 'Registro creado exitosamente');
         }
     }
 
@@ -51,7 +51,7 @@ class CategoriaController extends Controller
         }
         else {
             $categoria->update($request->all());
-            return redirect('categorias')->with('type', 'warning')->with('message', 'Categoría actualizada exitosamente');
+            return redirect('categorias')->with('type', 'warning')->with('message', 'Registro actualizado exitosamente');
         }
     }
 

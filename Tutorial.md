@@ -24,6 +24,20 @@ ahí revisamos que la ruta `'/'` raíz apunte al `index`
 
 ## Crear nuevo CRUD
 
+Resumen:
+
+- agregar pestaña de selección (botón) en la vista: layout
+
+- crear la migración
+
+- crear el modelo
+
+- crear el controlador
+
+- crear carpeta de vistas con: index, new, edit
+
+- agregar rutas al archivo de direcciónes web.
+
 ### Migración
 
 - crear migración:
@@ -201,3 +215,28 @@ en `nombreProyecto/resources/views/categorias` notar que hay una carpeta llamada
 - agregamos: `use App\Http\Controllers\CategoriaController` para poder acceder al controlador de Categoria
 
 - agregar `Route::resource('categorias', CategoriaController::class);` para poder acceder al controlador de Categoria y redirigir las vistas
+
+### Caso para CRUD de Usuarios
+
+- el modelo debe tener unas cosas extra:
+```
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Auth;
+class Usuario extends Authenticatable {
+    use HasFactory, Notifiable;
+    public $fillable = ['nombre', ... ];
+}
+```
+
+- la migración debe contener: `$table->string('email', length:100)->unique();` y `$table->rememberToken();` la segunda es obligatoria, va de penúltima antes de `timestamps`
+
+- en el controlador pondremos password con hash, esto en la función store y update:
+```
+$datos = $request->all();
+$datos['password'] = hash::make($datos['password']);
+Usuario::create($datos);
+```
