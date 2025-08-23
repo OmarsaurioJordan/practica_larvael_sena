@@ -5,17 +5,32 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Rol;
+use App\Models\Accion;
 
 class RolController extends Controller
 {
-    public function index() {
+    public function __construct()
+    {
+        $this->middleware('verificar:ver_roles')->only('index');
+        $this->middleware('verificar:crear_roles')->only('create', 'store');
+        $this->middleware('verificar:editar_roles')->only('edit', 'update');
+        $this->middleware('verificar:eliminar_roles')->only('destroy');
+        $this->middleware('verificar:ver_detalle_roles')->only('show');
+    }
+
+    public function index()
+    {
         $datos = Rol::all();
         return view('rols.index', compact('datos'));
     }
-    public function create() {
+
+    public function create()
+    {
         return view('rols.new');
     }
-    public function store(Request $request) {
+
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|max:50'
         ]);
@@ -27,11 +42,16 @@ class RolController extends Controller
             return redirect('rols')->with('type', 'success')->with('message', 'Registro creado exitosamente');
         }
     }
-    public function edit(string $id) {
-        $datos = Rol::find($id);
-        return view('rols.edit', compact('datos'));
+
+    public function edit(string $id)
+    {
+        $datos = Rol::with('permisos')->find($id);
+        $accions = Accion::all();
+        return view('rols.edit', compact('datos', 'accions'));
     }
-    public function update(Request $request, Rol $rol) {
+
+    public function update(Request $request, Rol $rol)
+    {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|max:50'
         ]);
@@ -39,11 +59,16 @@ class RolController extends Controller
             return back()->withErrors($validator)->withInput();
         }
         else {
-            $rol->update($request->all());
+            $rol->update([
+                'nombre' => $request->input('nombre')
+            ]);
+            $rol->acciones()->sync($request->input('accions', []));
             return redirect('rols')->with('type', 'warning')->with('message', 'Registro actualizado exitosamente');
         }
     }
-    public function destroy(string $id) {
+
+    public function destroy(string $id)
+    {
         Rol::destroy($id);
         return redirect('rols')->with('type', 'danger')->with('message', 'El registro se eliminó');
     }

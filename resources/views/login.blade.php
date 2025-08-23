@@ -9,6 +9,7 @@
     <body>
         <div class="container">
             <h2 class="text-center mt-4 mb-4">Inicio de Sesión</h2>
+            <p>Si es la primera vez que ingresa, use: admin@gmail.com con 123</p>
             @if(session('type'))
                 <div class="alert alert-{{session('type')}} alert-dismissible fade show" role="alert">
                     <strong>Noticia: </strong>{{ session('message') }}

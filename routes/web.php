@@ -31,8 +31,8 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::resource('usuarios', UsuarioController::class);
 
-    // estos son los middleware de uso individual, se usa el colectivo conectado a la DB mediante acciones y permisos
-
+    // estos son los middleware de uso individual, pero se comenta porque se usa el colectivo "verificarpermiso" que depende de los controladores, acciones y permisos en la DB, si se piensa usar estos individuales para rol, descomentar tambien en app.php
+    /*
     Route::middleware(['administrador'])->group(function () {
         // solo rol administrador
         Route::resource('categorias', CategoriaController::class);    
@@ -46,4 +46,9 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['vendedor'])->group(function () {
         // solo rol vendedor
     });
+    */
+
+    // como no se usan los middleware de acceso individual, sino que se establecio "verificarpermiso" desde los controllers, entonces aqui hay que poner esto
+    Route::resource('categorias', CategoriaController::class);    
+    Route::resource('rols', RolController::class);
 });

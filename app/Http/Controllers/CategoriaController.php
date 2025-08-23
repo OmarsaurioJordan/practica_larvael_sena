@@ -8,6 +8,15 @@ use App\Models\Categoria;
 
 class CategoriaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('verificar:ver_categorias')->only('index');
+        $this->middleware('verificar:crear_categorias')->only('create', 'store');
+        $this->middleware('verificar:editar_categorias')->only('edit', 'update');
+        $this->middleware('verificar:eliminar_categorias')->only('destroy');
+        $this->middleware('verificar:ver_detalle_categorias')->only('show');
+    }
+
     public function index()
     {
         $datos = Categoria::all();

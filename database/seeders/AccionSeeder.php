@@ -38,5 +38,57 @@ class AccionSeeder extends Seeder
             'url' => 'usuarios/id',
             'modulo' => 'Usuarios'
         ]);
+
+        Accion::create([
+            'nombre' => 'ver_roles',
+            'url' => 'rols',
+            'modulo' => 'Rols'
+        ]);
+        Accion::create([
+            'nombre' => 'crear_roles',
+            'url' => 'rols/create',
+            'modulo' => 'Rols'
+        ]);
+        Accion::create([
+            'nombre' => 'editar_roles',
+            'url' => 'rols/edit',
+            'modulo' => 'Rols'
+        ]);
+        Accion::create([
+            'nombre' => 'eliminar_roles',
+            'url' => 'rols/id',
+            'modulo' => 'Rols'
+        ]);
+        Accion::create([
+            'nombre' => 'ver_detalle_roles',
+            'url' => 'rols/id',
+            'modulo' => 'Rols'
+        ]);
+
+        Accion::create([
+            'nombre' => 'ver_categorias',
+            'url' => 'categorias',
+            'modulo' => 'Categorias'
+        ]);
+        Accion::create([
+            'nombre' => 'crear_categorias',
+            'url' => 'categorias/create',
+            'modulo' => 'Categorias'
+        ]);
+        Accion::create([
+            'nombre' => 'editar_categorias',
+            'url' => 'categorias/edit',
+            'modulo' => 'Categorias'
+        ]);
+        Accion::create([
+            'nombre' => 'eliminar_categorias',
+            'url' => 'categorias/id',
+            'modulo' => 'Categorias'
+        ]);
+        Accion::create([
+            'nombre' => 'ver_detalle_categorias',
+            'url' => 'categorias/id',
+            'modulo' => 'Categorias'
+        ]);
     }
 }

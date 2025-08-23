@@ -23,17 +23,19 @@
 			</div>
 		</div>
 		<br>
-		<div class='row'>
-			<div class='col-md-4'>
-				<label><strong>Rol:</strong></label><br>
-				<input type='radio' id='Admin' name='rol_id' value='1'>
-				<label for='Admin'>Admin</label><br>
-				<input type='radio' id='Vende' name='rol_id' value='2'>
-				<label for='Vende'>Vende</label><br>
-				<input type='radio' id='Compra' name='rol_id' value='3'>
-				<label for='Compra'>Compra</label>
-				@error('email')
-					<div class='error compacto col-lg-5'>{{ $message }}</div>
+		<div class="row">
+			<div class="col-md-4">
+				<label><strong>Rol:</strong></label>
+				<select name="rol_id" class="form-control">
+					<option value="">-- Selecciona un rol --</option>
+					@foreach($rols as $rol)
+						<option value="{{ $rol->id }}" <?php echo (old('rol_id', $datos->rol_id) == $rol->id ? 'selected' : ''); ?>>
+							{{ $rol->nombre }}
+						</option>
+					@endforeach
+				</select>
+				@error('rol_id')
+					<div class="error compacto col-lg-5">{{ $message }}</div>
 				@enderror
 			</div>
 		</div>
