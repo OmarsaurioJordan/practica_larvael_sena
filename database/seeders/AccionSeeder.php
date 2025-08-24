@@ -90,5 +90,31 @@ class AccionSeeder extends Seeder
             'url' => 'categorias/id',
             'modulo' => 'Categorias'
         ]);
+
+        Accion::create([
+            'nombre' => 'ver_productos',
+            'url' => 'productos',
+            'modulo' => 'Productos'
+        ]);
+        Accion::create([
+            'nombre' => 'crear_productos',
+            'url' => 'productos/create',
+            'modulo' => 'Productos'
+        ]);
+        Accion::create([
+            'nombre' => 'editar_productos',
+            'url' => 'productos/edit',
+            'modulo' => 'Productos'
+        ]);
+        Accion::create([
+            'nombre' => 'eliminar_productos',
+            'url' => 'productos/id',
+            'modulo' => 'Productos'
+        ]);
+        Accion::create([
+            'nombre' => 'ver_detalle_productos',
+            'url' => 'productos/id',
+            'modulo' => 'Productos'
+        ]);
     }
 }

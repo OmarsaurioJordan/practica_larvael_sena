@@ -11,6 +11,7 @@
         <div class="container">
             <a href="{{ url('/') }}">Inicio</a>
             @if (Auth::user())
+                 | <a href="{{ url('productos') }}">Productos</a>
                  | <a href="{{ url('usuarios') }}">Usuarios</a>
                 @if (Auth::user()->rol->nombre == "Administrador")
                      | <a href="{{ url('categorias') }}">Categorías</a>

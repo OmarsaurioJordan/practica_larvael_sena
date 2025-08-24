@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\ProductoController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -29,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('home', function () {
         return view('index');
     });
+    Route::resource('productos', ProductoController::class);
     Route::resource('usuarios', UsuarioController::class);
 
     // estos son los middleware de uso individual, pero se comenta porque se usa el colectivo "verificarpermiso" que depende de los controladores, acciones y permisos en la DB, si se piensa usar estos individuales para rol, descomentar tambien en app.php
