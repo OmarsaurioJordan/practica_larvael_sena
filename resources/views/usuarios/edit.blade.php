@@ -49,6 +49,18 @@
 			</div>
 		</div>
 		<br>
+		<div class="form-group">
+			<label><strong>Acciones:</strong></label><br>
+			@foreach($accions as $accion)
+				<div class="form-check">
+					<input type="checkbox" name="accions[]" value="{{ $accion->nombre }}" id="act{{ $accion->id }}" class="form-check-input" <?php echo (in_array($accion->nombre, explode(",", $datos->permisos)) ? 'checked' : ''); ?>>
+					<label for="act{{ $accion->id }}" class="form-check-label">
+						{{ $accion->nombre }}
+					</label>
+				</div>
+			@endforeach
+		</div>
+		<br>
 		<div class='row'>
 			<div class='col-md-4'>
 				<input type='password' name='password' class='form-control' placeholder='escriba la contraseña' value="">

@@ -18,7 +18,8 @@ class Usuario extends Authenticatable
         'telefono',
         'rol_id',
         'email',
-        'password'
+        'password',
+        'permisos'
     ];
 
     public function rol() {
@@ -26,8 +27,6 @@ class Usuario extends Authenticatable
     }
 
     public function tienePermiso($nombreAccion) {
-        return $this->rol && $this->rol->permisos->contains(function($permiso) use($nombreAccion) {
-            return $permiso->accion->nombre === $nombreAccion;
-        });
+        return $this->rol && in_array($nombreAccion, explode(",", $this->permisos));
     }
 }

@@ -12,18 +12,4 @@ class Accion extends Model
         'url',
         'modulo'
     ];
-
-    public function permisos() {
-        return $this->hashMany('App\Models\Permiso');
-    }
-
-    public function roles() {
-        return $this->belongsToMany(
-            Rol::class,
-            'permisos',
-            'accion_id',
-            'rol_id'
-        );
-    }
-
 }

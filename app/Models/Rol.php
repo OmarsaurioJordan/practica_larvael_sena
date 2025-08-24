@@ -14,17 +14,4 @@ class Rol extends Model
     public function usuarios() {
         return $this->hasMany('App\Models\Usuario');
     }
-
-    public function permisos() {
-        return $this->hasMany('App\Models\Permiso');
-    }
-
-    public function acciones() {
-        return $this->belongsToMany(
-            Accion::class,
-            'permisos',
-            'rol_id',
-            'accion_id'
-        );
-    }
 }

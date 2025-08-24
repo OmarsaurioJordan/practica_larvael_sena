@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('rol_id')->constrained('rols');
             $table->string('email', length:100)->unique();
             $table->string('password', length:200);
+            $table->string('permisos', length:400);
             $table->rememberToken();
             $table->timestamps();
         });

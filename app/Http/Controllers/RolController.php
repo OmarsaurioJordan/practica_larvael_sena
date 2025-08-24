@@ -45,9 +45,8 @@ class RolController extends Controller
 
     public function edit(string $id)
     {
-        $datos = Rol::with('permisos')->find($id);
-        $accions = Accion::all();
-        return view('rols.edit', compact('datos', 'accions'));
+        $datos = Rol::find($id);
+        return view('rols.edit', compact('datos'));
     }
 
     public function update(Request $request, Rol $rol)
@@ -59,10 +58,7 @@ class RolController extends Controller
             return back()->withErrors($validator)->withInput();
         }
         else {
-            $rol->update([
-                'nombre' => $request->input('nombre')
-            ]);
-            $rol->acciones()->sync($request->input('accions', []));
+            $rol->update($request->all());
             return redirect('rols')->with('type', 'warning')->with('message', 'Registro actualizado exitosamente');
         }
     }

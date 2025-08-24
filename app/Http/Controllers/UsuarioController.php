@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Usuario;
 use App\Models\Rol;
+use App\Models\Accion;
 use Auth;
 use Hash;
 
@@ -55,6 +56,7 @@ class UsuarioController extends Controller
         else {
             $datos = $request->all();
             $datos['password'] = hash::make($datos['password']);
+            $datos['permisos'] = "";
             Usuario::create($datos);
             return redirect('usuarios')->with('type', 'success')->with('message', 'Registro creado exitosamente');
         }
@@ -63,8 +65,9 @@ class UsuarioController extends Controller
     public function edit(string $id)
     {
         $rols = Rol::all();
+        $accions = Accion::all();
         $datos = Usuario::find($id);
-        return view('usuarios.edit', compact('datos', 'rols'));
+        return view('usuarios.edit', compact('datos', 'rols', 'accions'));
     }
 
     public function update(Request $request, Usuario $usuario)
@@ -74,7 +77,7 @@ class UsuarioController extends Controller
             'telefono' => 'required|max:50',
             'rol_id' => 'required',
             'email' => 'required|max:100',
-            'password' => 'required|max:200',
+            'password' => 'required|max:200'
         ]);
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
@@ -82,6 +85,8 @@ class UsuarioController extends Controller
         else {
             $datos = $request->all();
             $datos['password'] = hash::make($datos['password']);
+            $seleccionadas = $request->input('accions', []);
+            $datos['permisos'] = implode(',', $seleccionadas);
             $usuario->update($datos);
             return redirect('usuarios')->with('type', 'warning')->with('message', 'Registro actualizado exitosamente');
         }

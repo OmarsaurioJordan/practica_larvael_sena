@@ -14,18 +14,6 @@
 			</div>
 		</div>
 		<br>
-		<div class="form-group">
-			<label><strong>Acciones:</strong></label><br>
-			@foreach($accions as $accion)
-				<div class="form-check">
-					<input type="checkbox" name="accions[]" value="{{ $accion->id }}" id="act{{ $accion->id }}" class="form-check-input" <?php echo (in_array($accion->id, $datos->permisos->pluck('accion_id')->toArray()) ? 'checked' : ''); ?>>
-					<label for="act{{ $accion->id }}" class="form-check-label">
-						{{ $accion->nombre }}
-					</label>
-				</div>
-			@endforeach
-		</div>
-		<br>
 		<button class='btn btn-success'>Actualizar</button>
 		<a href="{{ url('rols') }}" class='btn btn-secondary'>Cancelar</a>
 	</form>
